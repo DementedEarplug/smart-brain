@@ -58,42 +58,22 @@ class App extends Component {
 
   calculateFaceLocation = (data) => {
     console.log(data);
-    const faces = data.outputs[0].data.regions;
-    let  faceLocations = [];
     const image = document.getElementById("inputimage");
     const imageWidth = Number(image.width);
     const imageHeight = Number(image.height);
-    // Check if there are multple faces
-    if (faces.length == 1) {
-      let clarifaiFace = faces[0].region_info.bounding_box;
+    return data.outputs[0].data.regions.map((face) => {
+      const clarifaiFace = face.region_info.bounding_box;
       let leftCol = clarifaiFace.left_col * imageWidth;
       let topRow = clarifaiFace.top_row * imageHeight;
       let rightCol = imageWidth - clarifaiFace.right_col * imageWidth;
       let bottomRow = imageHeight - clarifaiFace.bottom_row * imageHeight;
-      faceLocations.push({
+      return {
         leftCol,
         topRow,
         rightCol,
         bottomRow,
-      });
-    } else {
-      faceLocations = faces.map((face) => {
-        const clarifaiFace = face.region_info.bounding_box;
-        let leftCol = clarifaiFace.left_col * imageWidth;
-        let topRow = clarifaiFace.top_row * imageHeight;
-        let rightCol = imageWidth - clarifaiFace.right_col * imageWidth;
-        let bottomRow = imageHeight - clarifaiFace.bottom_row * imageHeight;
-        return {
-          leftCol,
-          topRow,
-          rightCol,
-          bottomRow,
-        };
-      });
-    }
-    console.log("LOGGER")
-    console.log(faceLocations)
-    return faceLocations
+      };
+    });
   };
 
   displayFaceBox = (boxes) => {
