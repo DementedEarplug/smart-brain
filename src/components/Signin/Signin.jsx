@@ -31,6 +31,7 @@ class Signin extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         if (data.id) {
+          localStorage.setItem("token", data.token)
           this.fetchUserProfile(data.id);
         }
       });
