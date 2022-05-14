@@ -28,8 +28,8 @@ const initialState = {
   input: "",
   imageUrl: "",
   boxes: [],
-  route: "home",
-  isSignedIn: true,
+  route: "signin",
+  isSignedIn: false,
   isProfileOpen: false,
   user: {
     id: "",
@@ -37,6 +37,8 @@ const initialState = {
     email: "",
     entries: 0,
     joined: "",
+    age: 0,
+    pet: "",
   },
 };
 
@@ -54,6 +56,8 @@ class App extends Component {
         email: data.email,
         entries: data.entries,
         joined: data.joined,
+        age: data.age,
+        pet: data.pet,
       },
     });
   };
@@ -146,7 +150,15 @@ class App extends Component {
         />
         {isProfileOpen && (
           <Modal>
-            <Profile toggleModal={this.toggleModal}/>
+            <Profile
+              toggleModal={this.toggleModal}
+              loadUser={this.loadUser}
+              id={this.state.user.id}
+              joined={this.state.user.joined}
+              name={this.state.user.name}
+              age={this.state.user.age}
+              pet={this.state.user.pet}
+            />
           </Modal>
         )}
         {route === "home" ? (

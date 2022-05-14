@@ -1,5 +1,5 @@
 import React from "react";
-import "../../App.css"
+import "../../App.css";
 
 class Signin extends React.Component {
   constructor(props) {
@@ -19,7 +19,7 @@ class Signin extends React.Component {
   };
 
   onSubmitSignIn = () => {
-    console.log("Submit sign in.")
+    console.log("Submit sign in.");
     fetch("http://localhost:8080/signin", {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -29,12 +29,24 @@ class Signin extends React.Component {
       }),
     })
       .then((response) => response.json())
-      .then((user) => {
-        if (user.id) {
-          this.props.loadUser(user);
-          this.props.onRouteChange("home");
+      .then((data) => {
+        if (data.id) {
+          this.fetchUserProfile(data.id);
         }
       });
+  };
+
+  fetchUserProfile = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8080/profile/${id}`);
+      const user = await response.json();
+      if (user.id) {
+        this.props.loadUser(user);
+        this.props.onRouteChange("home");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   render() {
@@ -43,7 +55,12 @@ class Signin extends React.Component {
       <article className='br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center'>
         <main className='pa4 black-80'>
           <div className='measure'>
-            <form onSubmit={(e)=>{e.preventDefault() ; this.onSubmitSignIn()}}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                this.onSubmitSignIn();
+              }}
+            >
               <fieldset id='sign_up' className='ba b--transparent ph0 mh0'>
                 <legend className='f1 fw6 ph0 mh0'>Sign In</legend>
                 <div className='mt3'>
