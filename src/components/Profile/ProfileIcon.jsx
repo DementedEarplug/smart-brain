@@ -7,7 +7,7 @@ import {
   DropdownItem,
 } from "reactstrap";
 
-const ProfileIcon = ({onSignOut}) => {
+const ProfileIcon = ({onSignOut, toggleModal}) => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
 
   return (
@@ -33,7 +33,7 @@ const ProfileIcon = ({onSignOut}) => {
             backgroundColor: "rgba(255,255,255,0.7)",
           }}
         >
-          <DropdownItem>View Profile</DropdownItem>
+          <DropdownItem onClick={()=>toggleModal()}>View Profile</DropdownItem>
           <DropdownItem onClick={()=>onSignOut("signout")}>Sign out</DropdownItem>
         </DropdownMenu>
       </Dropdown>
