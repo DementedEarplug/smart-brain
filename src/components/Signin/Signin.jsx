@@ -30,19 +30,21 @@ class Signin extends React.Component {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
-        if (data.id) {
-          this.fetchUserProfile(data.id);
-        }
-        if(data.token){
-          sessionStorage.setItem("token", data.token)
+        console.log(data);
+        if (data.token && data.id) {
+          this.fetchUserProfile(data.id, data.token);
+          sessionStorage.setItem("token", data.token);
         }
       });
   };
 
-  fetchUserProfile = async (id) => {
+  fetchUserProfile = async (id, token) => {
     try {
-      const response = await fetch(`http://localhost:8080/profile/${id}`);
+      const response = await fetch(`http://localhost:8080/profile/${id}`, {
+        headers: {
+          Authorization: token
+        }
+      });
       const user = await response.json();
       if (user.id) {
         this.props.loadUser(user);

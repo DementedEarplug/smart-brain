@@ -62,7 +62,7 @@ class App extends Component {
         .then((res) => res.json())
         .then((data) => {
           if (data && data.id) {
-            this.fetchUserProfile(data.id)
+            this.fetchUserProfile(data.id, token);
           }
         })
         .catch((err) => {
@@ -71,9 +71,11 @@ class App extends Component {
     }
   }
 
-  fetchUserProfile = async (id) => {
+  fetchUserProfile = async (id, token) => {
     try {
-      const response = await fetch(`http://localhost:8080/profile/${id}`);
+      const response = await fetch(`http://localhost:8080/profile/${id}`, {
+        headers: { Authorization: token },
+      });
       const user = await response.json();
       if (user.id) {
         this.loadUser(user);
@@ -132,7 +134,10 @@ class App extends Component {
     this.setState({ imageUrl: this.state.input });
     fetch("http://localhost:8080/imageurl", {
       method: "post",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: sessionStorage.getItem("token") || "",
+      },
       body: JSON.stringify({
         input: this.state.input,
       }),
@@ -142,7 +147,10 @@ class App extends Component {
         if (response) {
           fetch("http://localhost:8080/image", {
             method: "put",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: sessionStorage.getItem("token") || "",
+            },
             body: JSON.stringify({
               id: this.state.user.id,
             }),
