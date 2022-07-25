@@ -105,23 +105,27 @@ class App extends Component {
     const image = document.getElementById("inputimage");
     const imageWidth = Number(image.width);
     const imageHeight = Number(image.height);
-    return data.outputs[0].data.regions.map((face) => {
-      const clarifaiFace = face.region_info.bounding_box;
-      let leftCol = clarifaiFace.left_col * imageWidth;
-      let topRow = clarifaiFace.top_row * imageHeight;
-      let rightCol = imageWidth - clarifaiFace.right_col * imageWidth;
-      let bottomRow = imageHeight - clarifaiFace.bottom_row * imageHeight;
-      return {
-        leftCol,
-        topRow,
-        rightCol,
-        bottomRow,
-      };
-    });
+    if (data.outputs) {
+      return data.outputs[0].data.regions.map((face) => {
+        const clarifaiFace = face.region_info.bounding_box;
+        let leftCol = clarifaiFace.left_col * imageWidth;
+        let topRow = clarifaiFace.top_row * imageHeight;
+        let rightCol = imageWidth - clarifaiFace.right_col * imageWidth;
+        let bottomRow = imageHeight - clarifaiFace.bottom_row * imageHeight;
+        return {
+          leftCol,
+          topRow,
+          rightCol,
+          bottomRow,
+        };
+      });
+    }
   };
 
   displayFaceBox = (boxes) => {
-    this.setState({ boxes: boxes });
+    if(boxes){
+      this.setState({ boxes: boxes });
+    }
   };
 
   onInputChange = (event) => {
@@ -144,7 +148,7 @@ class App extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        if (response) {
+        if (response.status) { //Status only exist on good responses
           fetch("http://localhost:8080/image", {
             method: "put",
             headers: {
