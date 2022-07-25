@@ -26,6 +26,7 @@ const Profile = ({ toggleModal, loadUser, id, name, entries, joined, age, pet })
         age: userAge,
         pet: userPet,
       }
+      console.log(response)
       console.log(updatedUser);
       loadUser(updatedUser);
 
