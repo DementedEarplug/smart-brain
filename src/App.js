@@ -48,6 +48,42 @@ class App extends Component {
     this.state = initialState;
   }
 
+  componentDidMount() {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      console.log("Already have a token");
+      fetch("http://localhost:8080/signin", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && data.id) {
+            this.fetchUserProfile(data.id)
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
+
+  fetchUserProfile = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8080/profile/${id}`);
+      const user = await response.json();
+      if (user.id) {
+        this.loadUser(user);
+        this.onRouteChange("home");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   loadUser = (data) => {
     this.setState({
       user: {
