@@ -2,7 +2,16 @@ import React, { useState } from "react";
 
 import "./profile.css";
 
-const Profile = ({ toggleModal, loadUser, id, name, entries, joined, age, pet }) => {
+const Profile = ({
+  toggleModal,
+  loadUser,
+  id,
+  name,
+  entries,
+  joined,
+  age,
+  pet,
+}) => {
   const [userName, setUserName] = useState(name);
   const [userAge, setUserAge] = useState(age);
   const [userPet, setUserPet] = useState(pet);
@@ -11,8 +20,10 @@ const Profile = ({ toggleModal, loadUser, id, name, entries, joined, age, pet })
     try {
       const response = await fetch(`http://localhost:8080/profile/${id}`, {
         method: "put",
-        headers: { "Content-Type": "application/json",
-      Authorization: sessionStorage.getItem('token') || '' },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: sessionStorage.getItem("token") || "",
+        },
         body: JSON.stringify({
           name: userName,
           age: userAge,
@@ -26,11 +37,11 @@ const Profile = ({ toggleModal, loadUser, id, name, entries, joined, age, pet })
         joined,
         age: userAge,
         pet: userPet,
-      }
-      console.log(response)
+      };
+      console.log(response);
       console.log(updatedUser);
-      loadUser(updatedUser);
-
+      if (response.status === 200 || response.status === 304)
+        loadUser(updatedUser);
     } catch (error) {
       console.log(error);
     }
