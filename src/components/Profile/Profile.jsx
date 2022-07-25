@@ -11,7 +11,8 @@ const Profile = ({ toggleModal, loadUser, id, name, entries, joined, age, pet })
     try {
       const response = await fetch(`http://localhost:8080/profile/${id}`, {
         method: "put",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+      Authorization: sessionStorage.getItem('token') || '' },
         body: JSON.stringify({
           name: userName,
           age: userAge,
